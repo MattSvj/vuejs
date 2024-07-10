@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .product {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .sort-buttons {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="sort-buttons">
+      <button @click="sortAscending">Sort by Price: Low to High</button>
+      <button @click="sortDescending">Sort by Price: High to Low</button>
+    </div>
+    <div v-for="product in sortedProducts" :key="product.name" class="product">
+      <span>{{ product.name }}</span>
+      <span>{{ product.price | currency }}</span>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        products: [
+          { name: 'Product A', price: 30 },
+          { name: 'Product B', price: 20 },
+          { name: 'Product C', price: 50 },
+          { name: 'Product D', price: 40 }
+        ],
+        sortOrder: 'asc' 
+      },
+      computed: {
+        sortedProducts() {
+          return this.products.slice().sort((a, b) => {
+            if (this.sortOrder === 'asc') {
+              return a.price - b.price;
+            } else if (this.sortOrder === 'desc') {
+              return b.price - a.price;
+            }
+          });
+        }
+      },
+      methods: {
+        sortAscending() {
+          this.sortOrder = 'asc';
+        },
+        sortDescending() {
+          this.sortOrder = 'desc';
+        }
+      },
+      filters: {
+        currency(value) {
+          return `$${value.toFixed(2)}`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
